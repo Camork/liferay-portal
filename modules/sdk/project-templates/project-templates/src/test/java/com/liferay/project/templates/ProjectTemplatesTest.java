@@ -1173,7 +1173,7 @@ public class ProjectTemplatesTest {
 	}
 
 	@Test
-	public void testBuildTemplateModulesExtGradle() throws Exception {
+	public void testBuildTemplateModulesExt() throws Exception {
 		File gradleProjectDir = _buildTemplateWithGradle(
 			"modules-ext", "foo-ext", "--original-module-name",
 			"com.liferay.login.web", "--original-module-version", "2.0.4");
@@ -1183,67 +1183,14 @@ public class ProjectTemplatesTest {
 			"originalModule group: \"com.liferay\", ",
 			"name: \"com.liferay.login.web\", version: \"2.0.4\"");
 
-		if (Validator.isNotNull(_BUILD_PROJECTS) &&
-			_BUILD_PROJECTS.equals("true")) {
+		File mavenProjectDir = _buildTemplateWithMaven(
+			"modules-ext", "foo-ext", "com.test", "-DliferayVersion=7.1",
+			"-DoriginalModuleName=com.liferay.login.web",
+			"-DoriginalModuleVersion=2.0.4");
 
-			_executeGradle(gradleProjectDir, _GRADLE_TASK_PATH_BUILD);
+		_testContains(mavenProjectDir, "pom.xml", "com.liferay.login.web");
 
-			File gradleOutputDir = new File(gradleProjectDir, "build/libs");
-
-			Path gradleOutputPath = FileTestUtil.getFile(
-				gradleOutputDir.toPath(), _OUTPUT_FILENAME_GLOB_REGEX, 1);
-
-			Assert.assertNotNull(gradleOutputPath);
-
-			Assert.assertTrue(Files.exists(gradleOutputPath));
-		}
-	}
-
-	@Test
-	public void testBuildTemplateModulesExtMaven() throws Exception {
-		File destinationDir = temporaryFolder.newFolder("maven");
-
-		String template = "modules-ext";
-		String name = "foo-ext";
-		String groupId = "com.test";
-
-		List<String> completeArgs = new ArrayList<>();
-
-		completeArgs.add("archetype:generate");
-		completeArgs.add("--batch-mode");
-
-		String archetypeArtifactId =
-			"com.liferay.project.templates." + template.replace('-', '.');
-
-		completeArgs.add("-DarchetypeArtifactId=" + archetypeArtifactId);
-
-		String projectTemplateVersion =
-			ProjectTemplatesUtil.getArchetypeVersion(archetypeArtifactId);
-
-		Assert.assertTrue(
-			"Unable to get project template version",
-			Validator.isNotNull(projectTemplateVersion));
-
-		completeArgs.add("-DarchetypeGroupId=com.liferay");
-		completeArgs.add("-DarchetypeVersion=" + projectTemplateVersion);
-		completeArgs.add("-Dauthor=" + System.getProperty("user.name"));
-		completeArgs.add("-DgroupId=" + groupId);
-		completeArgs.add("-DartifactId=" + name);
-		completeArgs.add("-Dversion=1.0.0");
-		completeArgs.add("-DliferayVersion=7.1");
-		completeArgs.add("-DprojectType=standalone");
-		completeArgs.add("-DoriginalModuleName=com.liferay.login.web");
-		completeArgs.add("-DoriginalModuleVersion=3.0.4");
-
-		_executeMaven(destinationDir, completeArgs.toArray(new String[0]));
-
-		File projectDir = new File(destinationDir, name);
-
-		_testNotExists(projectDir, "pom.xml");
-		_testContains(
-			projectDir, "build.gradle",
-			"originalModule group: \"com.liferay\", ",
-			"name: \"com.liferay.login.web\", version: \"3.0.4\"");
+		_buildProjects(gradleProjectDir, mavenProjectDir);
 	}
 
 	@Test
