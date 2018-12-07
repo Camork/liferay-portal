@@ -76,7 +76,7 @@ dependencies {
 	projectTemplates group: "com.liferay", name: "com.liferay.project.templates.fragment", version: "1.0.23"
 	projectTemplates group: "com.liferay", name: "com.liferay.project.templates.freemarker.portlet", version: "1.0.20"
 	projectTemplates group: "com.liferay", name: "com.liferay.project.templates.layout.template", version: "1.0.21"
-	projectTemplates group: "com.liferay", name: "com.liferay.project.templates.modules.ext", version: "1.0.8"
+	projectTemplates group: "com.liferay", name: "com.liferay.project.templates.modules.ext", version: "1.0.9"
 	projectTemplates group: "com.liferay", name: "com.liferay.project.templates.mvc.portlet", version: "1.0.22"
 	projectTemplates group: "com.liferay", name: "com.liferay.project.templates.npm.angular.portlet", version: "1.0.19"
 	projectTemplates group: "com.liferay", name: "com.liferay.project.templates.npm.react.portlet", version: "1.0.19"
